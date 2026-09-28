@@ -1,17 +1,32 @@
+import re
 from sentence_transformers import SentenceTransformer, util
 
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
 SKILLS = [
-    "python", "java", "javascript", "react", "node", "fastapi", "flask",
-    "django", "sql", "mongodb", "docker", "kubernetes", "aws", "git",
-    "machine learning", "deep learning", "nlp", "tensorflow", "pytorch",
-    "pandas", "numpy", "scikit-learn", "rest api", "linux", "c++",
+    # languages
+    "python", "java", "javascript", "typescript", "c++", "c#", "go", "sql",
+    "html", "css",
+    # frontend
+    "react", "next.js", "redux", "tailwind", "angular", "vue",
+    # backend
+    "node", "express", "fastapi", "flask", "django", "spring boot",
+    "rest api", "graphql", "microservices", "jwt",
+    # databases
+    "mongodb", "mysql", "postgresql", "redis", "firebase",
+    # devops / tools
+    "docker", "kubernetes", "aws", "azure", "gcp", "git", "github",
+    "ci/cd", "linux", "postman",
+    # ML / data
+    "machine learning", "deep learning", "nlp", "computer vision",
+    "tensorflow", "pytorch", "scikit-learn", "pandas", "numpy", "opencv",
+    # cs fundamentals
+    "data structures", "algorithms", "system design", "oop",
 ]
 
 def find_skills(text: str) -> set:
     text = text.lower()
-    return {s for s in SKILLS if s in text}
+    return {s for s in SKILLS if re.search(rf"(?<![a-z]){re.escape(s)}(?![a-z])", text)}
 
 def analyze(resume: str, jd: str) -> dict:
     emb = model.encode([resume, jd])

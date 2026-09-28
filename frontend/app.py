@@ -11,11 +11,16 @@ if st.button("Analyze") and resume and jd:
         files={"resume": (resume.name, resume.getvalue(), "application/pdf")},
         data={"jd": jd},
     ).json()
+
     st.metric("Match score", f"{res['score']}%")
-    st.subheader("Matched skills")
-    st.write(", ".join(res["matched"]) or "None")
-    st.subheader("Missing skills")
-    st.write(", ".join(res["missing"]) or "None")
-    st.subheader("Suggestions")
-    for s in res["suggestions"]:
-        st.write("-", s)
+
+    if not res["matched"] and not res["missing"]:
+        st.warning("No known skills found in this job description. Paste the full JD, including the requirements section.")
+    else:
+        st.subheader("Matched skills")
+        st.write(", ".join(res["matched"]) or "None")
+        st.subheader("Missing skills")
+        st.write(", ".join(res["missing"]) or "None")
+        st.subheader("Suggestions")
+        for s in res["suggestions"]:
+            st.write("-", s)
